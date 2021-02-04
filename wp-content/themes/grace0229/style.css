@@ -931,7 +931,7 @@ h6{font-size:12px}
 .cat ul{margin-left:0}
 .cat ul li{width:100%;margin-bottom:3%}
 .cat ul li .index-cat-box{height:176px;margin-left:0;width:100%}
-.cat ul li a{position:absolute;height:100%;width:100%;top:0;left:0;z-index:999999;display:block}
+.cat ul li a{position:absolute;height:100%;width:100%;top:0;left:0;z-index:9999;display:block}
 .cat ul li a p{top:35%;font-size:17px}
 #top-slide{margin-bottom:10px;height:auto}
 #top-slide .owl-item .slider-content{}

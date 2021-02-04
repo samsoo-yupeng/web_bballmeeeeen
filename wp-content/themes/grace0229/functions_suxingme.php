@@ -699,6 +699,136 @@ function my_the_views($count){
     return number_format_i18n( intval($string) + 1000);
 }
 
+if(!function_exists('logger')){
+	/**
+	 * 写日志到文件
+	 * @param $dirname string 文件夹名
+	 * @param $output string|array 打印内容
+	 * @param $title string 标题
+	 */
+	function logger($dirname, $output, $title='===='){
+		$logPath = ABSPATH.'logs'.DIRECTORY_SEPARATOR;
+		$tagPath = $logPath.trim($dirname, DIRECTORY_SEPARATOR);
+		if(!is_dir($tagPath)){
+			mkdir($tagPath, 0777, true);
+		}
+		$filename = date('Ymd').'.log';
+		if(!is_string($output)){
+			$output = json_encode($output, JSON_UNESCAPED_UNICODE);
+		}
+		$format = "[".date('Y-m-d H:i:s')."]: ".$title."\n".$output."\n";
+		file_put_contents($tagPath.DIRECTORY_SEPARATOR.$filename, $format, FILE_APPEND);
+	}
+}
+
+if(!function_exists('get_domain')) {
+
+	/**
+	 * 获得当前的域名
+	 *
+	 * @return  string
+	 */
+	function get_domain()
+	{
+		/* 协议 */
+		$protocol = (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
+
+		/* 域名或IP地址 */
+		if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+			$host = $_SERVER['HTTP_X_FORWARDED_HOST'];
+		} elseif (isset($_SERVER['HTTP_HOST'])) {
+			$host = $_SERVER['HTTP_HOST'];
+		} else {
+			/* 端口 */
+			if (isset($_SERVER['SERVER_PORT'])) {
+				$port = ':' . $_SERVER['SERVER_PORT'];
+				if ((':80' == $port && 'http://' == $protocol) || (':443' == $port && 'https://' == $protocol)) {
+					$port = '';
+				}
+			} else {
+				$port = '';
+			}
+			if (isset($_SERVER['SERVER_NAME'])) {
+				$host = $_SERVER['SERVER_NAME'] . $port;
+			} elseif (isset($_SERVER['SERVER_ADDR'])) {
+				$host = $_SERVER['SERVER_ADDR'] . $port;
+			}
+		}
+
+		return $protocol . $host;
+	}
+}
+
+if(!function_exists('app_download_wp_footer')) {
+
+	function app_download_wp_footer()
+	{
+		?>
+		<div class="float_mask" id="float_mask">
+			<div class="float_layer">
+			</div>
+			<div class="float_content clearfix">
+				<div class="float_bg" onclick="downApp()" >
+					<a target="_blank" href="javascript:;" title='广告部分'>
+						<div class="float_slogan"><!--广告内容--></div>
+					</a>
+				</div>
+<!--				<div class="float_close">-->
+<!--					<a onClick="closeFootAd()" href="#" title="我知道了"></a>-->
+<!--				</div>-->
+			</div>
+            <div class="float_close">
+                <a onClick="closeFootAd()" href="#" title="我知道了"></a>
+            </div>
+		</div>
+		<script>
+            let u = navigator.userAgent
+            window.onload = function(){
+                if(getCookie("footad")==0 || !isMobile() ){
+                    document.getElementById("float_mask").style.display="none";
+                }else{
+                    document.getElementById("float_mask").style.display="block";
+                }
+            }
+            //关闭底部广告
+            function closeFootAd() {
+                document.getElementById("float_mask").style.display="none";
+                setCookie("footad","0");
+            }
+
+            //设置cookie
+            function setCookie(name,value){
+                var exp = new Date();
+                exp.setTime(exp.getTime() + 1*60*60*1000);//有效期1小时
+                document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+            }
+            //取cookies函数
+            function getCookie(name){
+                var arr = document.cookie.match(new RegExp("(^| )"+name+"=([^;]*)(;|$)"));
+                if(arr != null) return unescape(arr[2]); return null;
+            }
+            //判断访问终端
+            function downApp(){
+
+                let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1,
+                    isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/),
+                    urls = {
+                        'android':'https://bit.ly/2WG5ELq',
+                        'ios':'https://apple.co/3rnquxu'
+                    };
+                if(isAndroid){
+                    window.location.href=urls.android;
+                }else if(isiOS){
+                    window.location.href=urls.ios;
+                }
+            }
+		</script>
+
+		<?php
+	}
+}
+add_action('wp_footer', 'app_download_wp_footer');
+
 add_filter('the_views', 'my_the_views');
 add_filter('the_content', 'replace_text_wps');
 add_filter('the_excerpt', 'replace_text_wps');
