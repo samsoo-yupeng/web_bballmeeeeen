@@ -784,7 +784,8 @@ if(!function_exists('app_download_wp_footer')) {
 		<script>
             let u = navigator.userAgent
             window.onload = function(){
-                if(getCookie("footad")==0 || !isMobile() ){
+                // if(getCookie("footad")==0 || !isMobile() ){
+                if( !isMobile() ){
                     document.getElementById("float_mask").style.display="none";
                 }else{
                     document.getElementById("float_mask").style.display="block";
