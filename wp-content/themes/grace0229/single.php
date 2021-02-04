@@ -482,6 +482,7 @@ if($('.app-hidden-ads').length == 0){
 
 </script>
 
+
 <script>
 
 
@@ -490,7 +491,11 @@ if($('.app-hidden-ads').length == 0){
 		var cpInitW = 700; 
 		var cpInitH = 500; 
 		var cpWidth = isM.any()  ? ($('#page-content').width() * 0.88 ) : cpInitW; 
-		var cpSource = $(cplayerId).attr("title");
+		var cpSource = $(cplayerId).attr("data-source");
+
+		if(!cpSource){
+			cpSource = $(cplayerId).attr("title");
+		}
 	  
 		var cpHeight = cpInitH; var cpproportion = cpInitH / cpWidth; if(cpproportion > 1.1){
 			//如果宽高比有异常，则也把高度处理
